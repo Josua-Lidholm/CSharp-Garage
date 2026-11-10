@@ -30,3 +30,6 @@ Collections: Use a List, one Dictionary, and at least two different LINQ methods
 
 1. Park will essentially be creating a new vehicle object, putting it in the parkingSpot collection, and returning the spots number.
 2. Retrieve has the receipt functionality.
+
+
+What does a parking spot consist of? It has a number, that is the basic characteristic of a parking spot. It also has a vehicle, or no vehicle.

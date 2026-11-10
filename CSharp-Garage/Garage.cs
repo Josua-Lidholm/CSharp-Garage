@@ -75,8 +75,7 @@ public class Garage
         int i = 1;
         foreach (var spot in parkingSpots)
         {
-            Console.WriteLine($"{i}. {spot}");
-            i++;
+            
         }
     }
 
