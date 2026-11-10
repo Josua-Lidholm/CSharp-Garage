@@ -33,3 +33,39 @@ Collections: Use a List, one Dictionary, and at least two different LINQ methods
 
 
 What does a parking spot consist of? It has a number, that is the basic characteristic of a parking spot. It also has a vehicle, or no vehicle.
+
+Garage
+List<ParkingSpot>
+DateTime Clock
+decimal totalEarnings
+List<Receipt>
+
+TimeForward(int hours)
+CheckIn()
+CheckOut() - Should include making of receipt.
+ShowAllSpots()
+ShowAvailableSpots()
+ShowOccupiedSports()
+ShowStatistics() - amount/percentage of currently vacant spots and total earnings of garage.
+
+ParkingSpot
+int number
+occupant<Vehicle> (null for vacant)
+
+Vehicle
+LicensePlate
+Type
+Rate
+
+Car
+
+Motorcycle
+
+Receipt
+DateTime CheckIn
+DateTime CheckOut   
+ParkingSpot
+TotalHours
+Price
+
+Should receipts be saved in dictionary?

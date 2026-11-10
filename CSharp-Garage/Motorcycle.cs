@@ -4,6 +4,6 @@ public class Motorcycle : Vehicle
 {
     public Motorcycle (string licensePlate, string type) : base(licensePlate, type)
     {
-        _price = 10;
+        _rate = 10;
     }
 }
