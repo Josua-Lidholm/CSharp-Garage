@@ -1,3 +1,5 @@
+using System.ComponentModel;
+
 namespace CSharp_Garage;
 
 public class Garage
@@ -5,7 +7,7 @@ public class Garage
     private int _numberOfSpots = 10;
     private List<ParkingSpot>? _parkingSpots = new List<ParkingSpot>();
     private int totalEarnings;
-    private DateTime garageClock;
+    private DateTime garageClock = new DateTime();
     private List<Receipt> _receipts = new List<Receipt>();
     private bool _parkingFull;
 
@@ -55,7 +57,7 @@ public class Garage
         }
         
         // Start making receipt 
-        _receipts.Add(new Receipt(DateTime.Now, availableSpot, availableSpot.Occupant));
+        _receipts.Add(new Receipt(DateTime.Now, availableSpot.Number, availableSpot.Occupant));
 
         // foreach (var receipt in _receipts)
         // {
@@ -86,8 +88,19 @@ public class Garage
 
         if (findCarByPlate != null)
         {
+         
             // Build receipt
+            var thisReceipt = _receipts
+                .FirstOrDefault(r => r.Vehicle.LicensePlate == licensePlate && r.CheckOut == null);
             
+            thisReceipt.MakeReceipt(thisReceipt);
+            
+            foreach(PropertyDescriptor descriptor in TypeDescriptor.GetProperties(thisReceipt))
+            {
+                string name = descriptor.Name;
+                object value = descriptor.GetValue(thisReceipt);
+                Console.WriteLine("{0}={1}", name, value);
+            }
         }
 
         // Save receipt to _receipts
