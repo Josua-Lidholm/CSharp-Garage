@@ -17,6 +17,14 @@ public class ParkingSpot
         set => _occupant = value;
     }
 
+    private int _receiptId;
+
+    public int ReceiptId
+    {
+        get => _receiptId;
+        set => _receiptId = value;
+    }
+
     public ParkingSpot(int number, Vehicle occupant)
     {
         _number = number;
