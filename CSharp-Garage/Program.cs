@@ -6,7 +6,7 @@ while (true)
 {
     Console.Clear();
     Console.WriteLine("=== Parking garage ===");
-    Console.WriteLine(DateTime.UtcNow);
+    Console.WriteLine(parkingGarage.GarageClock);
 
     Console.WriteLine("1. Park");
     Console.WriteLine("2. Check out");
@@ -69,7 +69,7 @@ while (true)
             break;
         case ConsoleKey.D5:
             Console.Clear();
-            Console.WriteLine(DateTime.Now);
+            parkingGarage.ForwardGarageClockAnHour();
             Console.ReadKey();
             break;
         case ConsoleKey.D0:

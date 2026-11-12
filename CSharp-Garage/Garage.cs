@@ -7,7 +7,7 @@ public class Garage
     private int _numberOfSpots = 10;
     private List<ParkingSpot>? _parkingSpots = new List<ParkingSpot>();
     private int totalEarnings;
-    private DateTime garageClock = new DateTime();
+    public DateTime GarageClock { get; private set; } = DateTime.Now;
     private List<Receipt> _receipts = new List<Receipt>();
     private bool _parkingFull;
 
@@ -57,7 +57,7 @@ public class Garage
         }
         
         // Start making receipt 
-        _receipts.Add(new Receipt(DateTime.Now, availableSpot.Number, availableSpot.Occupant));
+        _receipts.Add(new Receipt(GarageClock, availableSpot.Number, availableSpot.Occupant));
 
         // foreach (var receipt in _receipts)
         // {
@@ -93,7 +93,7 @@ public class Garage
             var thisReceipt = _receipts
                 .FirstOrDefault(r => r.Vehicle.LicensePlate == licensePlate && r.CheckOut == null);
             
-            thisReceipt.MakeReceipt(thisReceipt);
+            thisReceipt.MakeReceipt(thisReceipt, GarageClock);
             
             foreach(PropertyDescriptor descriptor in TypeDescriptor.GetProperties(thisReceipt))
             {
@@ -134,7 +134,8 @@ public class Garage
         }
     }
 
-    /*
-     * Fast-forward clock method.
-     */
+    public void ForwardGarageClockAnHour()
+    {
+        GarageClock = GarageClock.AddHours(1);
+    }
 }
