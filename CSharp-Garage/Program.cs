@@ -21,7 +21,6 @@ while (true)
     {
         case ConsoleKey.D1:
             Console.Clear();
-            parkingGarage.ShowAllSpots();
             Console.WriteLine("Checking parking availability...");
             Thread.Sleep(1000);
             if (parkingGarage.CheckParkingStatus())
@@ -53,18 +52,45 @@ while (true)
             break;
         case ConsoleKey.D2:
             Console.Clear();
+            Console.WriteLine("Vilken bil vill du hämta ut?");
+            parkingGarage.ShowTakenSpots();
             string licensePlate2 = Console.ReadLine();
-            parkingGarage.CheckOut(licensePlate2);
+            Console.WriteLine(parkingGarage.CheckOut(licensePlate2));
             Console.ReadKey();
             break;
         case ConsoleKey.D3:
             Console.Clear();
-            parkingGarage.ShowAllSpots();
+            Console.WriteLine("Visa garaget");
+            Console.WriteLine("Vilka platser vill du kolla på?");
+            Console.WriteLine("1. Alla platser");
+            Console.WriteLine("2. Lediga platser");
+            Console.WriteLine("3. Tagna platser");
+            
+            input = Console.ReadKey(true);
+
+            switch (input.Key)
+            {
+                case ConsoleKey.D1:
+                    Console.WriteLine("Alla platser:");
+                    parkingGarage.ShowAllSpots();
+                    break;
+                case ConsoleKey.D2:
+                    Console.WriteLine("Lediga platser");
+                    parkingGarage.ShowAvailableSpots();
+                    break;
+                case ConsoleKey.D3:
+                    Console.WriteLine("Tagna platser");
+                    parkingGarage.ShowTakenSpots();
+                    break;
+            }
+            
             Console.ReadKey();
             break;
         case ConsoleKey.D4:
             Console.Clear();
-            parkingGarage.ShowAvailableSpots();
+            Console.WriteLine("Statistik");
+            Console.WriteLine($"Antal lediga platser just nu: {parkingGarage.AvailableSpots()}");
+            Console.WriteLine($"Total profit: {parkingGarage.GetTotalProfit()} kr");
             Console.ReadKey();
             break;
         case ConsoleKey.D5:

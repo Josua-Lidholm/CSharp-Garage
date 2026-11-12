@@ -2,45 +2,29 @@ namespace CSharp_Garage;
 
 public class Receipt
 {
-    public static int Count { get; set; }
     public Vehicle Vehicle { get; set; }
-    private int _id;
-    public DateTime CheckIn { get; set; }
-    public DateTime? CheckOut { get; set; }
+    public DateTime CheckInTime { get; set; }
+    public DateTime? CheckOutTime { get; set; }
     public int ParkingSpotNumber { get; set; }
-    public int TotalHours { get; set; }
+    public int HoursParked { get; set; }
     public decimal Price { get; set; }
 
-    public Receipt(DateTime checkIn, int parkingSpotNumber, Vehicle vehicle)
+    public Receipt(DateTime checkIn, DateTime checkOut, int parkingSpotNumber, Vehicle vehicle)
     {
-        _id = Count;
         Vehicle = vehicle;
-        CheckIn = checkIn;
+        CheckInTime = checkIn;
         ParkingSpotNumber = parkingSpotNumber;
-        Count++;
-    }
+        CheckOutTime = checkOut;
 
-    public void MakeReceipt(Receipt receipt, DateTime checkOut)
-    {
-        ///
-        /// För att skapa ett kvitto så behöver vi känna till en del saker:
-        /// Hur länge pågick parkeringen? En timme ska alltid debiteras. Price = rate * amountOfHours + 1
-        ///
-        
-        CheckOut = checkOut;
+        HoursParked = (checkOut - CheckInTime).Hours;
 
-        int totalHours = (checkOut - CheckIn).Hours;
-
-        if (totalHours < 1)
+        if (HoursParked < 1)
         {
             Price = Vehicle.Rate;
         }
         else
         {
-            Price = Vehicle.Rate * totalHours;
+            Price = Vehicle.Rate * HoursParked;
         }
-
-        Console.WriteLine(Price);
-        
     }
 }
