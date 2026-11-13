@@ -30,22 +30,19 @@ while (true)
                 var licensePlate = Console.ReadLine();
                 Console.WriteLine("Pick vehicle type:");
                 Console.WriteLine("1. Car");
-                Console.WriteLine("2. Motorcycle");
+                Console.WriteLine("2. Electric Car");
+                Console.WriteLine("3. Motorcycle");
                 input = Console.ReadKey(true);
                 string type = "";
-                if (input.Key == ConsoleKey.D1)
+
+                switch (input.Key)
                 {
-                    type = "car";
-                }
-                else if (input.Key == ConsoleKey.D2)
-                {
-                    type = "motorcycle";
-                }
-                else
-                {
-                    Console.WriteLine("Please pick 1 or 2.");
-                    Console.ReadKey();
-                    break;
+                    case ConsoleKey.D1: type = "car"; break;
+                    case ConsoleKey.D2: type = "eCar"; break;
+                    case ConsoleKey.D3: type = "motorcycle"; break;
+                    default: 
+                        Console.WriteLine("Please pick 1 or 2.");
+                        break;
                 }
                 Console.WriteLine(parkingGarage.CheckIn(licensePlate, type));
             }

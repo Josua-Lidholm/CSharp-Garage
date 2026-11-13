@@ -1,6 +1,6 @@
 namespace CSharp_Garage;
 
-public class Vehicle
+public abstract class Vehicle
 {
     public string LicensePlate { get; }
     public string Type { get; private set; }
@@ -12,8 +12,5 @@ public class Vehicle
         Type = type;
     }
 
-    public virtual void Honk()
-    {
-        Console.WriteLine("*Tuuuuut*");
-    }
+    public abstract void Honk();
 }

@@ -9,6 +9,7 @@ public class Motorcycle : Vehicle
 
     public override void Honk()
     {
+        Console.WriteLine("*TUUUUUUUUUT*");
         Console.WriteLine("Parkeringsvakt: Cool tuta, oh yeah!");
     }
 }

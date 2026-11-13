@@ -9,7 +9,7 @@ public class Car : Vehicle
 
     public override void Honk()
     {
-        base.Honk();
+        Console.WriteLine("*TUUUUUUUUUT*");
         Console.WriteLine("Parkeringsvakt: SLUTA TUTA!");
     }
 }

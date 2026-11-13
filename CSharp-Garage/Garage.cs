@@ -5,10 +5,10 @@ namespace CSharp_Garage;
 public class Garage
 {
     private int _numberOfSpots = 10;
-    private Dictionary<ParkingSpot, Vehicle>? _parkingSpots = new Dictionary<ParkingSpot, Vehicle>();
+    private Dictionary<ParkingSpot, Vehicle>? _parkingSpots = [];
     public decimal TotalProfit { get; private set; }
     public DateTime GarageClock { get; private set; } = DateTime.Now;
-    public List<Receipt> Receipts { get; } = new List<Receipt>();
+    public List<Receipt> Receipts { get; } = [];
     private bool _parkingFull;
 
     public Garage()
@@ -40,7 +40,7 @@ public class Garage
         }
 
         var alreadyParked = _parkingSpots
-            .Any(p => p.Key.Occupant ?.LicensePlate == licensePlate);
+            .Any(p => p.Key.Occupant?.LicensePlate == licensePlate);
 
         if (alreadyParked)
         {
@@ -53,12 +53,33 @@ public class Garage
         {
             availableSpot.Key.Occupant = new Car(licensePlate, type);
         }
+        else if (type == "eCar")
+        {
+            Console.WriteLine("Nuvarande laddning?");
+            var input = Console.ReadLine();
+
+            int chargeLevel = -1;
+            int.TryParse(input, out chargeLevel);
+
+            if (chargeLevel != -1)
+            {
+                availableSpot.Key.Occupant = new ElectricCar(licensePlate, type, chargeLevel);
+            }
+            else
+            {
+                Console.WriteLine("Invalid input");
+            }
+        }
         else if (type == "motorcycle")
         {
             availableSpot.Key.Occupant = new Motorcycle(licensePlate, type);
         }
 
         availableSpot.Key.CheckIn = GarageClock;
+        if (availableSpot.Key.Occupant is IChargeable)
+        {
+            availableSpot.Key.Occupant.
+        }
 
         if (_parkingSpots.All(p => p.Key.Occupant != null))
         {
@@ -82,7 +103,19 @@ public class Garage
         }
 
         // Build receipt
-        Receipt thisReceipt = new Receipt(parkedSpot.Key.CheckIn, GarageClock, parkedSpot.Key.Number, parkedSpot.Key.Occupant);
+        Receipt thisReceipt;
+        
+        if (parkedSpot.Key.Occupant is IChargeable)
+        {
+            thisReceipt = new Receipt(parkedSpot.Key.CheckIn, GarageClock, parkedSpot.Key.Number,
+                parkedSpot.Key.Occupant);    
+        }
+        else
+        {
+            thisReceipt = new Receipt(parkedSpot.Key.CheckIn, GarageClock, parkedSpot.Key.Number,
+                parkedSpot.Key.Occupant);    
+        }
+        
         Receipts.Add(thisReceipt);
 
         Console.WriteLine("Vill du tuta på parkeringsvakten?");
