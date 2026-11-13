@@ -6,4 +6,9 @@ public class Motorcycle : Vehicle
     {
         Rate = 10;
     }
+
+    public override void Honk()
+    {
+        Console.WriteLine("Parkeringsvakt: Cool tuta, oh yeah!");
+    }
 }

@@ -6,7 +6,6 @@ public class ParkingSpot
     public Vehicle? Occupant { get; set; }
     public DateTime CheckIn { get; set; }
     public DateTime CheckOut { get; private set; }
-
     public ParkingSpot(int number, Vehicle occupant)
     {
         Number = number;

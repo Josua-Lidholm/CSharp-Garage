@@ -44,6 +44,8 @@ while (true)
                 else
                 {
                     Console.WriteLine("Please pick 1 or 2.");
+                    Console.ReadKey();
+                    break;
                 }
                 Console.WriteLine(parkingGarage.CheckIn(licensePlate, type));
             }
@@ -71,14 +73,17 @@ while (true)
             switch (input.Key)
             {
                 case ConsoleKey.D1:
+                    Console.Clear();
                     Console.WriteLine("Alla platser:");
                     parkingGarage.ShowAllSpots();
                     break;
                 case ConsoleKey.D2:
+                    Console.Clear();
                     Console.WriteLine("Lediga platser");
                     parkingGarage.ShowAvailableSpots();
                     break;
                 case ConsoleKey.D3:
+                    Console.Clear();
                     Console.WriteLine("Tagna platser");
                     parkingGarage.ShowTakenSpots();
                     break;

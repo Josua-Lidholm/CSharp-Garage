@@ -25,7 +25,6 @@ public class Garage
         {
             return false;
         }
-
         return true;
     }
 
@@ -65,11 +64,6 @@ public class Garage
         }
 
         return $"{licensePlate} parked at {availableSpot.Number}";
-
-        // Is parking full?
-        // Which spot is free?
-        // Check vehicle type
-        // Create vehicle and add to li
     }
 
     public string CheckOut(string licensePlate)
@@ -85,9 +79,24 @@ public class Garage
             return $"Couldn't find vehicle {licensePlate}";
         }
 
-        // Build receipt
         Receipt thisReceipt = new Receipt(parkedSpot.CheckIn, GarageClock, parkedSpot.Number, parkedSpot.Occupant);
         Receipts.Add(thisReceipt);
+
+        Console.WriteLine("Vill du tuta på parkeringsvakten?");
+        Console.WriteLine("1. Ja");
+        Console.WriteLine("2. Nej");
+
+        var input = Console.ReadKey(true);
+
+        switch (input.Key)
+        {
+            case ConsoleKey.D1:
+                parkedSpot.Occupant.Honk();
+                break;
+            case ConsoleKey.D2:
+                Console.WriteLine("Nähä, va sån då.");
+                break;
+        }
 
         parkedSpot.Reset();
         
@@ -98,8 +107,6 @@ public class Garage
                $"Check out time: {thisReceipt.CheckOutTime}\n" +
                $"Hours parked: {thisReceipt.HoursParked}\n" +
                $"Cost: {thisReceipt.Price} kr";
-        // Save receipt to _receipts
-        // Remove vehicle
     }
 
     public void ShowAllSpots()
@@ -112,7 +119,7 @@ public class Garage
             }
             else
             {
-                Console.WriteLine($"{spot.Number}.{spot.Occupant.LicensePlate}");
+                Console.WriteLine($"{spot.Number}. {spot.Occupant.LicensePlate}");
             }
         }
     }

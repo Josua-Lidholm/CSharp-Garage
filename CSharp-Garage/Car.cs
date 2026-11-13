@@ -6,4 +6,10 @@ public class Car : Vehicle
     {
         Rate = 25;
     }
+
+    public override void Honk()
+    {
+        base.Honk();
+        Console.WriteLine("Parkeringsvakt: SLUTA TUTA!");
+    }
 }

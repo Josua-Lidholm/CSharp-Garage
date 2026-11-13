@@ -74,3 +74,6 @@ Should receipts be saved in dictionary?
 CheckOut()
 What objects are involved?
 Vehicle, Receipt, and ParkingSpot. We need a way to refer to all of these.
+
+
+Dictionary for licensePlate and parkingspot?
