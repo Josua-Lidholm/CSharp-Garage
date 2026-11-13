@@ -94,7 +94,7 @@ while (true)
         case ConsoleKey.D4:
             Console.Clear();
             Console.WriteLine("Statistik");
-            Console.WriteLine($"Antal lediga platser just nu: {parkingGarage.AvailableSpots()}");
+            Console.WriteLine($"Antal lediga platser just nu: {parkingGarage.NumberOfAvailableSpots()}");
             Console.WriteLine($"Total profit: {parkingGarage.GetTotalProfit()} kr");
             Console.ReadKey();
             break;

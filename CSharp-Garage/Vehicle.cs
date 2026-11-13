@@ -4,7 +4,7 @@ public class Vehicle
 {
     public string LicensePlate { get; }
     public string Type { get; private set; }
-    public decimal Rate { get; set; }
+    public decimal Rate { get; protected init; }
 
     protected Vehicle(string licensePlate, string type)
     {

@@ -5,7 +5,7 @@ namespace CSharp_Garage;
 public class Garage
 {
     private int _numberOfSpots = 10;
-    private List<ParkingSpot>? _parkingSpots = new List<ParkingSpot>();
+    private Dictionary<ParkingSpot, Vehicle>? _parkingSpots = new Dictionary<ParkingSpot, Vehicle>();
     public decimal TotalProfit { get; private set; }
     public DateTime GarageClock { get; private set; } = DateTime.Now;
     public List<Receipt> Receipts { get; } = new List<Receipt>();
@@ -13,9 +13,10 @@ public class Garage
 
     public Garage()
     {
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < _numberOfSpots; i++)
         {
-            _parkingSpots.Add(new ParkingSpot(i + 1, null));
+            ParkingSpot thisParkingSpot = new ParkingSpot(i + 1, null);
+            _parkingSpots.Add(thisParkingSpot, null);
         }
     }
 
@@ -25,6 +26,7 @@ public class Garage
         {
             return false;
         }
+
         return true;
     }
 
@@ -38,48 +40,49 @@ public class Garage
         }
 
         var alreadyParked = _parkingSpots
-            .Any(p => p.Occupant?.LicensePlate == licensePlate);
+            .Any(p => p.Key.Occupant ?.LicensePlate == licensePlate);
 
         if (alreadyParked)
         {
             return $"{licensePlate} has an ongoing parking already!";
         }
 
-        var availableSpot = _parkingSpots.Where(p => p.Occupant == null).FirstOrDefault();
+        var availableSpot = _parkingSpots.FirstOrDefault(p => p.Key.Occupant == null);
 
         if (type == "car")
         {
-            availableSpot.Occupant = new Car(licensePlate, type);
+            availableSpot.Key.Occupant = new Car(licensePlate, type);
         }
         else if (type == "motorcycle")
         {
-            availableSpot.Occupant = new Motorcycle(licensePlate, type);
+            availableSpot.Key.Occupant = new Motorcycle(licensePlate, type);
         }
 
-        availableSpot.CheckIn = GarageClock;
-        
-        if (_parkingSpots.All(p => p.Occupant != null))
+        availableSpot.Key.CheckIn = GarageClock;
+
+        if (_parkingSpots.All(p => p.Key.Occupant != null))
         {
             _parkingFull = true;
         }
 
-        return $"{licensePlate} parked at {availableSpot.Number}";
+        return $"{licensePlate} parked at {availableSpot.Key.Number}";
     }
 
     public string CheckOut(string licensePlate)
     {
-        licensePlate = licensePlate.ToUpper();
+        licensePlate = licensePlate.ToUpper().Trim();
 
-        ParkingSpot parkedSpot = _parkingSpots
-            .Where(p => p.Occupant?.LicensePlate == licensePlate && p.CheckOut == default)
+        var parkedSpot = _parkingSpots
+            .Where(p => p.Key.Occupant?.LicensePlate == licensePlate && p.Key.CheckOut == default)
             .FirstOrDefault();
 
-        if (parkedSpot == null)
+        if (parkedSpot.Key.Occupant == null)
         {
             return $"Couldn't find vehicle {licensePlate}";
         }
 
-        Receipt thisReceipt = new Receipt(parkedSpot.CheckIn, GarageClock, parkedSpot.Number, parkedSpot.Occupant);
+        // Build receipt
+        Receipt thisReceipt = new Receipt(parkedSpot.Key.CheckIn, GarageClock, parkedSpot.Key.Number, parkedSpot.Key.Occupant);
         Receipts.Add(thisReceipt);
 
         Console.WriteLine("Vill du tuta på parkeringsvakten?");
@@ -91,15 +94,15 @@ public class Garage
         switch (input.Key)
         {
             case ConsoleKey.D1:
-                parkedSpot.Occupant.Honk();
+                parkedSpot.Key.Occupant.Honk();
                 break;
             case ConsoleKey.D2:
                 Console.WriteLine("Nähä, va sån då.");
                 break;
         }
 
-        parkedSpot.Reset();
-        
+        parkedSpot.Key.Reset();
+
         return $"Receipt \n" +
                $"License plate: {thisReceipt.Vehicle.LicensePlate}\n" +
                $"Parking spot: {thisReceipt.ParkingSpotNumber}\n" +
@@ -113,30 +116,30 @@ public class Garage
     {
         foreach (var spot in _parkingSpots)
         {
-            if (spot.Occupant == null)
+            if (spot.Key.Occupant == null)
             {
-                Console.WriteLine($"{spot.Number}. Available!");
+                Console.WriteLine($"{spot.Key.Number}. Available!");
             }
             else
             {
-                Console.WriteLine($"{spot.Number}. {spot.Occupant.LicensePlate}");
+                Console.WriteLine($"{spot.Key.Number}. {spot.Key.Occupant.LicensePlate}");
             }
         }
     }
 
-    public int AvailableSpots()
+    public int NumberOfAvailableSpots()
     {
         var availableSpots = _parkingSpots
-            .Where(p => p.Occupant == null).Count();
+            .Where(p => p.Key.Occupant == null).Count();
 
         return availableSpots;
     }
-    
+
     public void ShowAvailableSpots()
     {
         var availableSpots = _parkingSpots
-            .Where(p => p.Occupant == null)
-            .Select(p => $"{p.Number}. Available!");
+            .Where(p => p.Key.Occupant == null)
+            .Select(p => $"{p.Key.Number}. Available!");
 
         foreach (var spot in availableSpots)
         {
@@ -147,8 +150,8 @@ public class Garage
     public void ShowTakenSpots()
     {
         var takenSpots = _parkingSpots
-            .Where(p => p.Occupant != null)
-            .Select(p => $"{p.Number}. {p.Occupant.LicensePlate}");
+            .Where(p => p.Key.Occupant != null)
+            .Select(p => $"{p.Key.Number}. {p.Key.Occupant.LicensePlate}");
 
         foreach (var spot in takenSpots)
         {
@@ -162,7 +165,7 @@ public class Garage
 
         return TotalProfit;
     }
-    
+
     public void ForwardGarageClockAnHour()
     {
         GarageClock = GarageClock.AddHours(1);
