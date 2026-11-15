@@ -1,4 +1,4 @@
-namespace CSharp_Garage;
+namespace CSharp_Garage.Models;
 
 public class Receipt
 {
@@ -10,8 +10,8 @@ public class Receipt
     public decimal Price { get; }
     public int CheckInChargeLevel { get; }
     public int CheckOutChargeLevel { get; }
-    public int HoursCharged { get; private set; }
-    public decimal ChargePrice { get; set; }
+    public int HoursCharged { get; }
+    public decimal ChargePrice { get; }
 
     public Receipt(DateTime checkIn, DateTime checkOut, int parkingSpotNumber, Vehicle vehicle)
     {

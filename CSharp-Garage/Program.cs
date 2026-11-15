@@ -1,19 +1,20 @@
 ﻿using CSharp_Garage;
+using CSharp_Garage.Services;
 
 Garage parkingGarage = new Garage();
 
 while (true)
 {
     Console.Clear();
-    Console.WriteLine("=== Parking garage ===");
+    Console.WriteLine("=== Pakeringsgarage ===");
     Console.WriteLine(parkingGarage.GarageClock);
 
-    Console.WriteLine("1. Park");
-    Console.WriteLine("2. Check out");
-    Console.WriteLine("3. Show garage");
-    Console.WriteLine("4. Garage statistics");
-    Console.WriteLine("5. Fast-forward time an hour");
-    Console.WriteLine("0. Exit");
+    Console.WriteLine("1. Parkera");
+    Console.WriteLine("2. Hämta ut");
+    Console.WriteLine("3. Visa garage");
+    Console.WriteLine("4. Garage statistik");
+    Console.WriteLine("5. Spola fram en timme");
+    Console.WriteLine("0. Åk iväg (Avsluta)");
 
     var input = Console.ReadKey(true);
 
@@ -21,17 +22,17 @@ while (true)
     {
         case ConsoleKey.D1:
             Console.Clear();
-            Console.WriteLine("Checking parking availability...");
-            Thread.Sleep(1000);
+            Console.WriteLine("Kollar efter lediga platser...");
+            parkingGarage.CheckIn();
             if (parkingGarage.CheckParkingStatus())
             {
-                Console.WriteLine("Parking available!");
-                Console.WriteLine("Enter license plate: ");
+                Console.WriteLine("Plats finns!");
+                Console.WriteLine("Ange regnummer: ");
                 var licensePlate = Console.ReadLine();
-                Console.WriteLine("Pick vehicle type:");
-                Console.WriteLine("1. Car");
-                Console.WriteLine("2. Electric Car");
-                Console.WriteLine("3. Motorcycle");
+                Console.WriteLine("Välj fordonstyp:");
+                Console.WriteLine("1. Bil");
+                Console.WriteLine("2. Elbil");
+                Console.WriteLine("3. Motorcykel");
                 input = Console.ReadKey(true);
                 string type = "";
 
@@ -40,7 +41,7 @@ while (true)
                     case ConsoleKey.D1: type = "car"; break;
                     case ConsoleKey.D2: type = "eCar"; break;
                     case ConsoleKey.D3: type = "motorcycle"; break;
-                    default: Console.WriteLine("Please pick 1 or 2."); break;
+                    default: Console.WriteLine("Vänligen välj 1 eller 2."); break;
                 }
                 Console.WriteLine(parkingGarage.CheckIn(licensePlate, type));
             }
@@ -90,7 +91,7 @@ while (true)
             Console.Clear();
             Console.WriteLine("Statistik");
             Console.WriteLine($"Antal lediga platser just nu: {parkingGarage.NumberOfAvailableSpots()}");
-            Console.WriteLine($"Total profit: {parkingGarage.GetTotalProfit()} kr");
+            Console.WriteLine($"Total vinst: {parkingGarage.GetTotalProfit()} kr");
             Console.ReadKey();
             break;
         case ConsoleKey.D5:

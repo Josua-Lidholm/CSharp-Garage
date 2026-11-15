@@ -1,4 +1,4 @@
-namespace CSharp_Garage;
+namespace CSharp_Garage.Models;
 
 public class ElectricCar : Car, IChargeable
 {
@@ -6,8 +6,8 @@ public class ElectricCar : Car, IChargeable
 
     public int ChargeLevel
     {
-        get { return _chargeLevel; }
-        set
+        get => _chargeLevel;
+        private set
         {
             if (value > 100)
             {
@@ -24,9 +24,9 @@ public class ElectricCar : Car, IChargeable
         }
     }
 
-    public int ChargedPerHour { get; set; }
+    public int ChargedPerHour { get; }
     public bool FullyCharged { get; set; }
-    public int ChargeCostPerHour { get; set; }
+    public int ChargeCostPerHour { get; }
     public int HoursCharged { get; set; }
 
     public ElectricCar(string licensePlate, string type, int chargeLevel) : base(licensePlate, type)
@@ -43,6 +43,7 @@ public class ElectricCar : Car, IChargeable
             ChargeLevel += ChargedPerHour;
             HoursCharged++;
         }
+
         if (ChargeLevel >= 100)
         {
             FullyCharged = true;

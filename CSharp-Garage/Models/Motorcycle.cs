@@ -1,4 +1,4 @@
-namespace CSharp_Garage;
+namespace CSharp_Garage.Models;
 
 public class Motorcycle : Vehicle
 {
