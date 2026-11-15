@@ -7,14 +7,48 @@ public class ElectricCar : Car, IChargeable
     public int ChargeLevel
     {
         get { return _chargeLevel; }
-        set { _chargeLevel = Math.Max(100, Math.Min(0, value)); }
+        set
+        {
+            if (value > 100)
+            {
+                _chargeLevel = 100;
+            }
+            else if (value < 0)
+            {
+                _chargeLevel = 0;
+            }
+            else
+            {
+                _chargeLevel = value;
+            }
+        }
     }
 
-    public int ChargeRatePerHour { get; set; }
+    public int ChargedPerHour { get; set; }
+    public bool FullyCharged { get; set; }
+    public int ChargeCostPerHour { get; set; }
+    public int HoursCharged { get; set; }
 
     public ElectricCar(string licensePlate, string type, int chargeLevel) : base(licensePlate, type)
     {
         ChargeLevel = chargeLevel;
-        ChargeRatePerHour = 5;
+        ChargeCostPerHour = 5;
+        ChargedPerHour = 20;
+    }
+
+    public void ChargeElectricVehicle()
+    {
+        /// If fullycharged, don't charge
+        /// Else, ChargeLevel += ChargedPerHour. HoursCharged +=1.
+        /// If ChargeLevel == 100, Chargelevel full.
+        if (!FullyCharged)
+        {
+            ChargeLevel += ChargedPerHour;
+            HoursCharged++;
+        }
+        if (ChargeLevel >= 100)
+        {
+            FullyCharged = true;
+        }
     }
 }

@@ -33,6 +33,7 @@ public class Garage
     public string CheckIn(string licensePlate, string type)
     {
         licensePlate = licensePlate.ToUpper();
+        int chargeLevel = -1;
 
         if (_parkingFull)
         {
@@ -57,8 +58,7 @@ public class Garage
         {
             Console.WriteLine("Nuvarande laddning?");
             var input = Console.ReadLine();
-
-            int chargeLevel = -1;
+            
             int.TryParse(input, out chargeLevel);
 
             if (chargeLevel != -1)
@@ -76,9 +76,10 @@ public class Garage
         }
 
         availableSpot.Key.CheckIn = GarageClock;
-        if (availableSpot.Key.Occupant is IChargeable)
+
+        if (availableSpot.Key.Occupant is IChargeable iChargeable)
         {
-            availableSpot.Key.Occupant.
+            availableSpot.Key.CheckInChargeLevel = chargeLevel;
         }
 
         if (_parkingSpots.All(p => p.Key.Occupant != null))
@@ -88,7 +89,7 @@ public class Garage
 
         return $"{licensePlate} parked at {availableSpot.Key.Number}";
     }
-
+    
     public string CheckOut(string licensePlate)
     {
         licensePlate = licensePlate.ToUpper().Trim();
@@ -102,13 +103,16 @@ public class Garage
             return $"Couldn't find vehicle {licensePlate}";
         }
 
+        bool isIChargeable = false;
+        
         // Build receipt
         Receipt thisReceipt;
         
-        if (parkedSpot.Key.Occupant is IChargeable)
+        if (parkedSpot.Key.Occupant is IChargeable chargeable)
         {
             thisReceipt = new Receipt(parkedSpot.Key.CheckIn, GarageClock, parkedSpot.Key.Number,
-                parkedSpot.Key.Occupant);    
+                parkedSpot.Key.Occupant, parkedSpot.Key.CheckInChargeLevel, chargeable.ChargeLevel, chargeable.HoursCharged);
+            isIChargeable = true;
         }
         else
         {
@@ -135,6 +139,19 @@ public class Garage
         }
 
         parkedSpot.Key.Reset();
+
+        if (isIChargeable)
+        {
+            return $"Receipt \n" +
+                   $"License plate: {thisReceipt.Vehicle.LicensePlate}\n" +
+                   $"Parking spot: {thisReceipt.ParkingSpotNumber}\n" +
+                   $"Check in time: {thisReceipt.CheckInTime}\n" +
+                   $"Check out time: {thisReceipt.CheckOutTime}\n" +
+                   $"Hours parked: {thisReceipt.HoursParked}\n" +
+                   $"Check in charge: {thisReceipt.CheckInChargeLevel}\n " +
+                   $"Check out charge: {thisReceipt.CheckOutChargeLevel} \n" + 
+                   $"Cost: {thisReceipt.Price} kr";
+        }
 
         return $"Receipt \n" +
                $"License plate: {thisReceipt.Vehicle.LicensePlate}\n" +
@@ -199,8 +216,25 @@ public class Garage
         return TotalProfit;
     }
 
+    static void ChargeElectricVehicles(IChargeable chargeable)
+    {
+        chargeable.ChargeElectricVehicle();
+        
+    }
+
     public void ForwardGarageClockAnHour()
     {
         GarageClock = GarageClock.AddHours(1);
+
+        var allParkedVehicles = _parkingSpots.Select(p => p.Key.Occupant);
+
+        foreach (var vehicle in allParkedVehicles)
+        {
+            if (vehicle is IChargeable ichargeable)
+            {
+                ichargeable.ChargeElectricVehicle();
+            }
+        }
+        
     }
 }

@@ -40,9 +40,7 @@ while (true)
                     case ConsoleKey.D1: type = "car"; break;
                     case ConsoleKey.D2: type = "eCar"; break;
                     case ConsoleKey.D3: type = "motorcycle"; break;
-                    default: 
-                        Console.WriteLine("Please pick 1 or 2.");
-                        break;
+                    default: Console.WriteLine("Please pick 1 or 2."); break;
                 }
                 Console.WriteLine(parkingGarage.CheckIn(licensePlate, type));
             }

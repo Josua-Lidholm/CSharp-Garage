@@ -8,6 +8,9 @@ public class Receipt
     public int ParkingSpotNumber { get; }
     public int HoursParked { get; }
     public decimal Price { get; }
+    public int CheckInChargeLevel { get; }
+    public int CheckOutChargeLevel { get; }
+    public int HoursCharged { get; private set; }
 
     public Receipt(DateTime checkIn, DateTime checkOut, int parkingSpotNumber, Vehicle vehicle)
     {
@@ -18,6 +21,28 @@ public class Receipt
 
         HoursParked = (checkOut - CheckInTime).Hours;
 
+        if (HoursParked < 1)
+        {
+            Price = Vehicle.Rate;
+        }
+        else
+        {
+            Price = Vehicle.Rate * HoursParked;
+        }
+    }
+    
+    public Receipt(DateTime checkIn, DateTime checkOut, int parkingSpotNumber, Vehicle vehicle, int checkInChargeLevel, int checkOutChargeLevel, int hoursCharged)
+    {
+        Vehicle = vehicle;
+        CheckInTime = checkIn;
+        ParkingSpotNumber = parkingSpotNumber;
+        CheckOutTime = checkOut;
+        CheckInChargeLevel = checkInChargeLevel;
+        CheckOutChargeLevel = checkOutChargeLevel;
+
+        HoursParked = (checkOut - CheckInTime).Hours;
+        HoursCharged = hoursCharged;
+        
         if (HoursParked < 1)
         {
             Price = Vehicle.Rate;
