@@ -4,7 +4,7 @@ namespace CSharp_Garage.Services;
 
 public class Garage
 {
-    private int _numberOfParkingSpots = 1;
+    private int _numberOfParkingSpots = 10;
     private Dictionary<ParkingSpot, Vehicle>? _parkingSpots = [];
     public decimal TotalProfit { get; private set; }
     public DateTime GarageClock { get; private set; } = DateTime.Now;
@@ -20,71 +20,99 @@ public class Garage
         }
     }
 
-    public bool CheckParkingStatus()
+    public bool IsParkingAvailable()
     {
         if (_parkingFull) return false;
         return true;
     }
 
-    public bool isAlreadyParked(string licensePlate)
+    public bool IsAlreadyParked(string licensePlate)
     {
-        licensePlate = licensePlate.ToUpper();
-        
         var alreadyParked = _parkingSpots
             .Any(p => p.Key.Occupant?.LicensePlate == licensePlate);
 
         if (alreadyParked)
         {
-            Console.WriteLine($"{licensePlate} är redan parkerad!");
             return true;
         }
 
         return false;
     }
 
-    public void AttemptCheckIn()
-    {
-        
-    }
-
-    public string CheckIn(string licensePlate, string type)
+    public string CheckIn()
     {
         if (_parkingFull) return "Det är fullt här, åk någon annanstans!";
+
+        Console.WriteLine("Ange regnummer: ");
+        string licensePlate = Console.ReadLine().ToUpper();
+
+        if (licensePlate == "") return "Vänligen ange registreringsnummer!";
+
+        if (IsAlreadyParked(licensePlate)) return $"{licensePlate} är redan parkerad!";
+
+        Console.Clear();
         
-        isAlreadyParked(licensePlate);
+        var availableSpot = _parkingSpots.FirstOrDefault(p => p.Key.Occupant == null);
+        Console.WriteLine($"Plats {availableSpot.Key.Number} finns tillgänglig för {licensePlate}!");
+
+        Console.WriteLine("Välj fordonstyp:");
+        Console.WriteLine("1. Bil");
+        Console.WriteLine("2. Motorcykel");
+        var numInput = Console.ReadKey(true);
+        string type = "";
+
+        switch (numInput.Key)
+        {
+            case ConsoleKey.D1: type = "car"; break;
+            case ConsoleKey.D2: type = "motorcycle"; break;
+            default: 
+                return $"Vänligen välj 1 eller 2."; 
+        }
+
+        Console.Clear();
         
         int chargeLevel = -1;
 
-        var availableSpot = _parkingSpots.FirstOrDefault(p => p.Key.Occupant == null);
-
-        if (type == "car")
+        switch (type)
         {
-            availableSpot.Key.Occupant = new Car(licensePlate, type);
-        }
-        else if (type == "eCar")
-        {
-            Console.WriteLine("Nuvarande laddning?");
-            var input = Console.ReadLine();
+            case "car":
+                Console.WriteLine("Är det en elbil?");
+                Console.WriteLine("1. Ja");
+                Console.WriteLine("2. Nej");
+                numInput = Console.ReadKey(true);
 
-            int.TryParse(input, out chargeLevel);
+                switch (numInput.Key)
+                {
+                    case ConsoleKey.D1:
+                        Console.WriteLine("Nuvarande laddning?");
+                        var input = Console.ReadLine();
 
-            if (chargeLevel != -1)
-            {
-                availableSpot.Key.Occupant = new ElectricCar(licensePlate, type, chargeLevel);
-            }
-            else
-            {
-                Console.WriteLine("Invalid input");
-            }
-        }
-        else if (type == "motorcycle")
-        {
-            availableSpot.Key.Occupant = new Motorcycle(licensePlate, type);
+                        int.TryParse(input, out chargeLevel);
+
+                        if (chargeLevel != -1 && chargeLevel != 0)
+                        {
+                            availableSpot.Key.Occupant = new ElectricCar(licensePlate, type, chargeLevel);
+                        }
+                        else
+                        {
+                            return "Ogiltigt värde. Parkering avbruten.";
+                        }
+
+                        break;
+                    case ConsoleKey.D2: availableSpot.Key.Occupant = new Car(licensePlate, type); break;
+                    default: return "Vänligen välj 1 eller 2.";
+                }
+
+                break;
+            case "motorcycle":
+                availableSpot.Key.Occupant = new Motorcycle(licensePlate, type);
+                break;
+            default: return "Vänligen välj 1 eller 2.";
         }
 
         availableSpot.Key.CheckIn = GarageClock;
 
-        if (availableSpot.Key.Occupant is IChargeable iChargeable)
+        if (availableSpot.Key.Occupant is IChargeable)
         {
             availableSpot.Key.CheckInChargeLevel = chargeLevel;
         }
@@ -97,15 +125,19 @@ public class Garage
         return $"{licensePlate} parkerad på plats {availableSpot.Key.Number}";
     }
 
-    public string CheckOut(string licensePlate)
+    public string CheckOut()
     {
+        Console.WriteLine("Vilken bil vill du hämta ut?");
+        ShowTakenSpots();
+        string licensePlate = Console.ReadLine();
+        
         licensePlate = licensePlate.ToUpper().Trim();
 
         var parkedSpot = _parkingSpots
             .Where(p => p.Key.Occupant?.LicensePlate == licensePlate && p.Key.CheckOut == default)
             .FirstOrDefault();
 
-        if (parkedSpot.Key.Occupant == null)
+        if (parkedSpot.Key?.Occupant == null)
         {
             return $"Kunde inte hitta fordon {licensePlate}";
         }
@@ -142,7 +174,7 @@ public class Garage
                 parkedSpot.Key.Occupant.Honk();
                 break;
             case ConsoleKey.D2:
-                Console.WriteLine("Nähä, va sån då.");
+                Console.WriteLine("Nähä, va sån då. >:(");
                 break;
         }
 
@@ -158,7 +190,7 @@ public class Garage
                    $"Antal timmar parkerad: {thisReceipt.HoursParked}\n" +
                    $"Laddning vid påbörjad parkering: {thisReceipt.CheckInChargeLevel}\n" +
                    $"Laddning vid avslutad parkering: {thisReceipt.CheckOutChargeLevel}\n" +
-                   $"Laddninskostnad: {thisReceipt.ChargePrice} kr\n" +
+                   $"Laddningskostnad: {thisReceipt.ChargePrice} kr\n" +
                    $"Parkeringskostnad: {thisReceipt.Price - thisReceipt.ChargePrice} kr\n" +
                    $"Total kostnad: {thisReceipt.Price}";
         }
@@ -224,11 +256,6 @@ public class Garage
         TotalProfit = Receipts.Sum(r => r.Price);
 
         return TotalProfit;
-    }
-
-    static void ChargeElectricVehicles(IChargeable chargeable)
-    {
-        chargeable.ChargeElectricVehicle();
     }
 
     public void ForwardGarageClockAnHour()

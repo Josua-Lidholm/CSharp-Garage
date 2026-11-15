@@ -23,37 +23,18 @@ while (true)
         case ConsoleKey.D1:
             Console.Clear();
             Console.WriteLine("Kollar efter lediga platser...");
-            parkingGarage.CheckIn();
-            if (parkingGarage.CheckParkingStatus())
+
+            if (parkingGarage.IsParkingAvailable())
             {
                 Console.WriteLine("Plats finns!");
-                Console.WriteLine("Ange regnummer: ");
-                var licensePlate = Console.ReadLine();
-                Console.WriteLine("Välj fordonstyp:");
-                Console.WriteLine("1. Bil");
-                Console.WriteLine("2. Elbil");
-                Console.WriteLine("3. Motorcykel");
-                input = Console.ReadKey(true);
-                string type = "";
-
-                switch (input.Key)
-                {
-                    case ConsoleKey.D1: type = "car"; break;
-                    case ConsoleKey.D2: type = "eCar"; break;
-                    case ConsoleKey.D3: type = "motorcycle"; break;
-                    default: Console.WriteLine("Vänligen välj 1 eller 2."); break;
-                }
-                Console.WriteLine(parkingGarage.CheckIn(licensePlate, type));
+                Console.WriteLine(parkingGarage.CheckIn());
             }
-            
             Console.ReadKey();
             break;
+            
         case ConsoleKey.D2:
             Console.Clear();
-            Console.WriteLine("Vilken bil vill du hämta ut?");
-            parkingGarage.ShowTakenSpots();
-            string licensePlate2 = Console.ReadLine();
-            Console.WriteLine(parkingGarage.CheckOut(licensePlate2));
+            parkingGarage.CheckOut();
             Console.ReadKey();
             break;
         case ConsoleKey.D3:
