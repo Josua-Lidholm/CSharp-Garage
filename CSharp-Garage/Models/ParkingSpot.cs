@@ -1,17 +1,17 @@
 namespace CSharp_Garage.Models;
 
-public class ParkingSpot(int number, Vehicle occupant)
+public class ParkingSpot(int number, Vehicle? vehicle)
 {
     public int Number { get; } = number;
-    public Vehicle? Occupant { get; set; } = occupant;
-    public DateTime CheckIn { get; set; }
-    public DateTime CheckOut { get; private set; }
-    public int CheckInChargeLevel { get; set; }
+    public Vehicle? ParkedVehicle { get; set; } = vehicle;
+    public DateTime ParkingStart { get; set; }
+    public DateTime ParkingEnd { get; private set; }
+    public int ParkingStartChargeLevel { get; set; }
 
     public void Reset()
     {
-        Occupant = null;
-        CheckIn = default;
-        CheckOut = default;
+        ParkedVehicle = null;
+        ParkingStart = default;
+        ParkingEnd = default;
     }
 }

@@ -4,12 +4,13 @@ public class Motorcycle : Vehicle
 {
     public Motorcycle (string licensePlate, string type) : base(licensePlate, type)
     {
-        Rate = 10;
+        CostPerHour = 10;
     }
 
     public override void Honk()
     {
-        Console.WriteLine("*TUUUUUUUUUT*");
-        Console.WriteLine("Parkeringsvakt: Cool tuta, oh yeah!");
+        Console.WriteLine("*tuuut*");
+        Thread.Sleep(1000);
+        Console.WriteLine("Parkeringsvakt: Vilken tyst och trevlig tuta!");
     }
 }

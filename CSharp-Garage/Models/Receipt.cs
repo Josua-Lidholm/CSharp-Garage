@@ -3,57 +3,62 @@ namespace CSharp_Garage.Models;
 public class Receipt
 {
     public Vehicle Vehicle { get; }
-    public DateTime CheckInTime { get; }
-    public DateTime? CheckOutTime { get; }
+    public DateTime ParkingStart { get; }
+    public DateTime? ParkingEnd { get; }
     public int ParkingSpotNumber { get; }
     public int HoursParked { get; }
-    public decimal Price { get; }
-    public int CheckInChargeLevel { get; }
-    public int CheckOutChargeLevel { get; }
-    public int HoursCharged { get; }
-    public decimal ChargePrice { get; }
+    public int ParkingCost { get; }
+    public int ParkingStartChargeLevel { get; }
+    public int ParkingEndChargeLevel { get; }
+    private int HoursCharged { get; }
+    public int ChargeCost { get; }
+    public int TotalCost { get; }
 
     public Receipt(DateTime checkIn, DateTime checkOut, int parkingSpotNumber, Vehicle vehicle)
     {
         Vehicle = vehicle;
-        CheckInTime = checkIn;
+        ParkingStart = checkIn;
         ParkingSpotNumber = parkingSpotNumber;
-        CheckOutTime = checkOut;
+        ParkingEnd = checkOut;
 
-        HoursParked = (checkOut - CheckInTime).Hours;
+        HoursParked = (checkOut - ParkingStart).Hours;
 
         if (HoursParked < 1)
         {
-            Price = Vehicle.Rate;
+            ParkingCost = Vehicle.CostPerHour;
         }
         else
         {
-            Price = Vehicle.Rate * HoursParked;
+            ParkingCost = Vehicle.CostPerHour * HoursParked;
         }
+
+        TotalCost = ParkingCost;
     }
 
     public Receipt(DateTime checkIn, DateTime checkOut, int parkingSpotNumber, Vehicle vehicle, int checkInChargeLevel,
         int checkOutChargeLevel, int hoursCharged, int chargeCostPerHour)
     {
         Vehicle = vehicle;
-        CheckInTime = checkIn;
+        ParkingStart = checkIn;
         ParkingSpotNumber = parkingSpotNumber;
-        CheckOutTime = checkOut;
-        CheckInChargeLevel = checkInChargeLevel;
-        CheckOutChargeLevel = checkOutChargeLevel;
+        ParkingEnd = checkOut;
+        ParkingStartChargeLevel = checkInChargeLevel;
+        ParkingEndChargeLevel = checkOutChargeLevel;
 
-        HoursParked = (checkOut - CheckInTime).Hours;
+        HoursParked = (checkOut - ParkingStart).Hours;
         HoursCharged = hoursCharged;
 
-        ChargePrice = chargeCostPerHour * HoursCharged;
+        ChargeCost = chargeCostPerHour * HoursCharged;
 
         if (HoursParked < 1)
         {
-            Price = Vehicle.Rate + ChargePrice;
+            ParkingCost = Vehicle.CostPerHour;
         }
         else
         {
-            Price = Vehicle.Rate * HoursParked + ChargePrice;
+            ParkingCost = Vehicle.CostPerHour * HoursParked;
         }
+
+        TotalCost = ChargeCost + ParkingCost;
     }
 }

@@ -26,15 +26,14 @@ while (true)
 
             if (parkingGarage.IsParkingAvailable())
             {
-                Console.WriteLine("Plats finns!");
-                Console.WriteLine(parkingGarage.CheckIn());
+                Console.WriteLine(parkingGarage.StartParking());
             }
             Console.ReadKey();
             break;
             
         case ConsoleKey.D2:
             Console.Clear();
-            parkingGarage.CheckOut();
+            Console.WriteLine(parkingGarage.EndParking());
             Console.ReadKey();
             break;
         case ConsoleKey.D3:
@@ -51,17 +50,14 @@ while (true)
             {
                 case ConsoleKey.D1:
                     Console.Clear();
-                    Console.WriteLine("Alla platser:");
                     parkingGarage.ShowAllSpots();
                     break;
                 case ConsoleKey.D2:
                     Console.Clear();
-                    Console.WriteLine("Lediga platser");
                     parkingGarage.ShowAvailableSpots();
                     break;
                 case ConsoleKey.D3:
                     Console.Clear();
-                    Console.WriteLine("Tagna platser");
                     parkingGarage.ShowTakenSpots();
                     break;
             }

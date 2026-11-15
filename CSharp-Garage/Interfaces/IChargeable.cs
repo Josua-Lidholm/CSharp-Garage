@@ -1,10 +1,10 @@
-namespace CSharp_Garage;
+namespace CSharp_Garage.Interfaces;
 
 public interface IChargeable
 {
-    int ChargeLevel { get; }
-    int ChargeCostPerHour { get; }
-    int HoursCharged { get; }
-    bool FullyCharged { get; set; }
+    int BatteryChargeLevel { get; }
+    int BatteryChargeCostPerHour { get; }
+    int BatteryHoursCharged { get; }
+    bool BatteryFullyCharged { get; }
     void ChargeElectricVehicle();
 }

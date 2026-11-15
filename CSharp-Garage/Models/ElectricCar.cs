@@ -1,52 +1,48 @@
+using CSharp_Garage.Interfaces;
+
 namespace CSharp_Garage.Models;
 
 public class ElectricCar : Car, IChargeable
 {
-    private int _chargeLevel;
+    private int _batteryChargeLevel;
 
-    public int ChargeLevel
+    public int BatteryChargeLevel
     {
-        get => _chargeLevel;
+        get => _batteryChargeLevel;
         private set
         {
-            if (value > 100)
+            _batteryChargeLevel = value switch
             {
-                _chargeLevel = 100;
-            }
-            else if (value < 0)
-            {
-                _chargeLevel = 0;
-            }
-            else
-            {
-                _chargeLevel = value;
-            }
+                > 100 => 100,
+                < 0 => 0,
+                _ => value
+            };
         }
     }
 
-    public int ChargedPerHour { get; }
-    public bool FullyCharged { get; set; }
-    public int ChargeCostPerHour { get; }
-    public int HoursCharged { get; set; }
+    private int BatteryChargedPerHour { get; }
+    public bool BatteryFullyCharged { get; private set; }
+    public int BatteryChargeCostPerHour { get; }
+    public int BatteryHoursCharged { get; private set; }
 
-    public ElectricCar(string licensePlate, string type, int chargeLevel) : base(licensePlate, type)
+    public ElectricCar(string licensePlate, string type, int batteryChargeLevel) : base(licensePlate, type)
     {
-        ChargeLevel = chargeLevel;
-        ChargeCostPerHour = 5;
-        ChargedPerHour = 20;
+        BatteryChargeLevel = batteryChargeLevel;
+        BatteryChargeCostPerHour = 5;
+        BatteryChargedPerHour = 20;
     }
 
     public void ChargeElectricVehicle()
     {
-        if (!FullyCharged)
+        if (!BatteryFullyCharged)
         {
-            ChargeLevel += ChargedPerHour;
-            HoursCharged++;
+            BatteryChargeLevel += BatteryChargedPerHour;
+            BatteryHoursCharged++;
         }
 
-        if (ChargeLevel >= 100)
+        if (BatteryChargeLevel >= 100)
         {
-            FullyCharged = true;
+            BatteryFullyCharged = true;
         }
     }
 }
