@@ -111,7 +111,7 @@ public class Garage
         if (parkedSpot.Key.Occupant is IChargeable chargeable)
         {
             thisReceipt = new Receipt(parkedSpot.Key.CheckIn, GarageClock, parkedSpot.Key.Number,
-                parkedSpot.Key.Occupant, parkedSpot.Key.CheckInChargeLevel, chargeable.ChargeLevel, chargeable.HoursCharged);
+                parkedSpot.Key.Occupant, parkedSpot.Key.CheckInChargeLevel, chargeable.ChargeLevel, chargeable.HoursCharged, chargeable.ChargeCostPerHour);
             isIChargeable = true;
         }
         else
@@ -148,9 +148,11 @@ public class Garage
                    $"Check in time: {thisReceipt.CheckInTime}\n" +
                    $"Check out time: {thisReceipt.CheckOutTime}\n" +
                    $"Hours parked: {thisReceipt.HoursParked}\n" +
-                   $"Check in charge: {thisReceipt.CheckInChargeLevel}\n " +
-                   $"Check out charge: {thisReceipt.CheckOutChargeLevel} \n" + 
-                   $"Cost: {thisReceipt.Price} kr";
+                   $"Check in charge: {thisReceipt.CheckInChargeLevel}\n" +
+                   $"Check out charge: {thisReceipt.CheckOutChargeLevel}\n" +
+                   $"Charge cost: {thisReceipt.ChargePrice} kr\n" + 
+                   $"Parking cost: {thisReceipt.Price - thisReceipt.ChargePrice} kr\n" +
+                   $"Total cost: {thisReceipt.Price}";
         }
 
         return $"Receipt \n" +

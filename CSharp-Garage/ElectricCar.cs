@@ -38,9 +38,6 @@ public class ElectricCar : Car, IChargeable
 
     public void ChargeElectricVehicle()
     {
-        /// If fullycharged, don't charge
-        /// Else, ChargeLevel += ChargedPerHour. HoursCharged +=1.
-        /// If ChargeLevel == 100, Chargelevel full.
         if (!FullyCharged)
         {
             ChargeLevel += ChargedPerHour;
